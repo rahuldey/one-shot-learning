@@ -1,0 +1,52 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5432:5432"
+
+  webserver:
+    image: puckel/docker-airflow:1.10.4
+    build:
+      context: https://github.com/puckel/docker-airflow.git#1.10.4
+      dockerfile: Dockerfile
+      args:
+        AIRFLOW_DEPS: s3        
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - LOAD_EX=n
+      - EXECUTOR=Local
+      - FERNET_KEY=XJplkws1Cf8Z-6qDGIlxqAbdWaJnwFLhhqPx-VTjY-M=
+    volumes:
+      - /tmp/airflow/dags:/usr/local/airflow/dags
+    ports:
+      - "8085:8080"
+    command: webserver
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  minio-s3:
+    image: minio/minio
+    environment:
+      - MINIO_ACCESS_KEY=testkey
+      - POSTGRES_PASSWORD=testsecret
+    volumes:
+      - /tmp/data:/data
+    ports:
+      - "9000:9000"
+    command: server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+

@@ -1,0 +1,9 @@
+model_data/
+datasets_jpg/
+*.pyc
+.ipynb_checkpoints/
+env/
+__pycache__/
+.vscode/
+node_modules/
+.DS_Store/
