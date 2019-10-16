@@ -2,15 +2,13 @@ import os
 from flask import request, jsonify, Blueprint
 from werkzeug.utils import secure_filename, import_string
 from app import predict as prediction
+import config
 
 routes = Blueprint('api', __name__)
 
 
 def getConfig():
-    if os.environ['ENVIRON'] == 'DEVELOPMENT':
-        return import_string('config.DevelopmentConfig')()
-    elif os.environ['ENVIRON'] == 'PRODUCTION':
-        return import_string('config.ProductionConfig')()
+    return config.DevelopmentConfig()
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'pgm'])
