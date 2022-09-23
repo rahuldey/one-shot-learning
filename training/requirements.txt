@@ -15,7 +15,7 @@ Markdown==3.1.1
 numpy==1.17.2
 opt-einsum==3.1.0
 Pillow==8.1.1
-protobuf==3.10.0
+protobuf==3.18.3
 python-dateutil==2.8.0
 PyYAML==5.1.2
 s3transfer==0.2.1
